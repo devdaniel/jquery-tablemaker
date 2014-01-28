@@ -11,6 +11,7 @@ function tablemaker() {
         container.find('.number').number(true);
         container.find('.number-percent').number(true, 2).append(('<span>%</span>'));
         container.find('.number-currency').number(true, currency_decimals).prepend('<span>$</span>');
+        container.find('.number-currency').css('text-align', 'right');
     };
 
     // given a array of containers, empty them
@@ -52,6 +53,8 @@ function tablemaker() {
         var display_index = false;
         var skip_cols = false;
 
+        config = config ? config : {};
+
         // no data
         if (typeof(d) === 'undefined' || typeof(data[0]) === 'undefined') {
             container.text('no data... :(');
@@ -65,16 +68,20 @@ function tablemaker() {
             if (typeof(v) == 'number') {
                 v = v.toString();
             }
-            if (k.charAt(0) == '%') {
-                col_types.push('percent');
-            } else if (k.charAt(0) == '$') {
-                col_types.push('currency');
-            } else if (v.match(/^\-?\d+.?\d+$/)) {
-                col_types.push('number');
-            } else if (k === 'url') {
-                col_types.push('url');
+            if(config.types) {
+                col_types.push(config.types[k]);
             } else {
-                col_types.push('');
+                if (k.charAt(0) == '%') {
+                    col_types.push('percent');
+                } else if (k.charAt(0) == '$') {
+                    col_types.push('currency');
+                } else if (v.match(/^\-?\d+.?\d+$/)) {
+                    col_types.push('number');
+                } else if (k === 'url') {
+                    col_types.push('url');
+                } else {
+                    col_types.push('');
+                }
             }
             var text = '-';
             if (typeof(k) !== 'undefined') {
@@ -218,7 +225,7 @@ function tablemaker() {
             table.tablesorter({sortList:[table_sort_order]});
         }
         container.append(table);
-        fix_numbers(undefined, config);
+        fix_numbers(container, config);
     };
 
     return {
@@ -226,4 +233,3 @@ function tablemaker() {
         'create_table'     : create_table
     };
 }
-
