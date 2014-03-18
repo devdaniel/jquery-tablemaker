@@ -1,3 +1,12 @@
+function toTitleCase(str) {
+    return str.replace(
+            /\w\S*/g,
+            function(txt) {
+                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            }
+    );
+}
+
 function tablemaker() {
     var submit_function;
 
@@ -71,21 +80,21 @@ function tablemaker() {
             if(config.types) {
                 col_types.push(config.types[k]);
             } else {
-                if (k.charAt(0) == '%') {
+                if (v.charAt(0) == '%') {
                     col_types.push('percent');
-                } else if (k.charAt(0) == '$') {
+                } else if (v.charAt(0) == '$') {
                     col_types.push('currency');
                 } else if (v.match(/^\-?\d+.?\d+$/)) {
                     col_types.push('number');
-                } else if (k === 'url') {
+                } else if (v === 'url') {
                     col_types.push('url');
                 } else {
                     col_types.push('');
                 }
             }
             var text = '-';
-            if (typeof(k) !== 'undefined') {
-                text = toTitleCase(k.replace(/^%|_/g, ' '));
+            if (typeof(v) !== 'undefined') {
+                text = toTitleCase(v.replace(/^%|_/g, ' '));
                 text.replace(/^  *|  *$/g, '');
             }
             titles.push(text);
